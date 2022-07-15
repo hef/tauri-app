@@ -56,6 +56,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 16
+    - name: bump version number
+      run: npm version ${{ needs.release.outputs.version }} --no-git-tag-version
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
