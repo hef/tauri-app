@@ -8,8 +8,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     outputs:
-      version:  ${{ steps.get-release.semantic-release.version }}
-      release_id: ${{ steps.get-release.outputs.result }}
+      version:  ${{ steps.get-release.outputs.version }}
+      release_id: ${{ steps.semantic-release.outputs.result }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
             const { data } = await github.rest.repos.getReleaseByTag({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag: v${{ steps.get-release.semantic-release.version }}
+              tag: v${{ steps.get-release.outputs.version }}
             })
             return data.id
 
