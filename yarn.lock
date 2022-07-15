@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.18.8.tgz#822146080ac9c62dac0823bb3489622e0bc1cbdf"
   integrity sha512-RSKRfYX20dyH+elbJK2uqAkVyucL+xXzhqlMD5/ZXx+dAAwpyB7HsvnHe/ZUGOF+xLr5Wx9/JoXVTj6BQE2/oA==
 
-"@tauri-apps/api@^1.0.2":
+"@tauri-apps/api@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.0.2.tgz#5228720e35d50fd08df87067dc29e7306c1f7a10"
   integrity sha512-yuNW0oeJ1/ZA7wNF1KgxhHrSu5viPVzY/UgUczzN5ptLM8dH15Juy5rEGkoHfeXGju90Y/l22hi3BtIrp/za+w==
@@ -57,7 +57,7 @@
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.0.4.tgz#bf14bb0cfa2c0e74a981c6424dc36f68dbfd4b5c"
   integrity sha512-6m1Ie7+YeKdOY7aXZCw/Py30DeMEAukE2+WWuZgfxZTTG9QrnZO+DbaKtjuEG0A8HKHCz63+ZNxOTshS1ognEw==
 
-"@tauri-apps/cli@^1.0.4":
+"@tauri-apps/cli@1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@tauri-apps/cli/-/cli-1.0.4.tgz#4a943d10ff022ae6ad9fb33e94cc5c25509bcfb9"
   integrity sha512-AqfbQUFU2jDYmkjiowl+Yv1yNkey/e+N23sKyDtXQQNvxE6ieR4voY4i6bShY97F+DbRVdjWcjGiLkWS3i4DHw==
@@ -72,7 +72,7 @@
     "@tauri-apps/cli-win32-ia32-msvc" "1.0.4"
     "@tauri-apps/cli-win32-x64-msvc" "1.0.4"
 
-"@vitejs/plugin-vue@^3.0.0":
+"@vitejs/plugin-vue@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-3.0.0.tgz#7081e2b3fbe04e291bb85107b9fb57a1fa5e6aeb"
   integrity sha512-yWP34ArFh/jAeNUDkkLz/kVRLjf5ppJiq4L36f64Cp6dIrMQeYZGDP9xxdemlXfZR9ylN9JgHUl3GzfqOtgYDg==
@@ -394,7 +394,7 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-vite@^3.0.0:
+vite@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/vite/-/vite-3.0.0.tgz#b4675cb9ab83ec0803b9c952ffa6519bcce033a7"
   integrity sha512-M7phQhY3+fRZa0H+1WzI6N+/onruwPTBTMvaj7TzgZ0v2TE+N2sdLKxJOfOv9CckDWt5C4HmyQP81xB4dwRKzA==
@@ -406,7 +406,7 @@ vite@^3.0.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vue@^3.2.37:
+vue@3.2.37:
   version "3.2.37"
   resolved "https://registry.yarnpkg.com/vue/-/vue-3.2.37.tgz#da220ccb618d78579d25b06c7c21498ca4e5452e"
   integrity sha512-bOKEZxrm8Eh+fveCqS1/NkG/n6aMidsI6hahas7pa0w/l7jkbssJVsRhVDs07IdDq7h9KHswZOgItnwJAgtVtQ==
