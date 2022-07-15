@@ -53,4 +53,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        releaseId: ${{ needs.release.outputs.id }}
+        releaseId: ${{ needs.release.outputs.release_id }}
