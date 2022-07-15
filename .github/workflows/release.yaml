@@ -32,7 +32,7 @@ jobs:
         id: get-release
         uses: actions/github-script@v6
         env:
-          release_id: ${{ steps.get-release.outputs.version }}
+          release_id: ${{ steps.semantic-release.outputs.version }}
         with:
           script: |
             const { data } = await github.rest.repos.getReleaseByTag({
