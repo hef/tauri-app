@@ -32,7 +32,7 @@
       [
         "@semantic-release/exec",
         {
-          "publishCmd": "echo ::set-output name=release_id::${release[0].id}"
+          "publishCmd": "echo ::set-output name=version::${nextRelease.version}"
         }
       ]
     ]
