@@ -14,7 +14,7 @@
     "vue": "3.2.37"
   },
   "devDependencies": {
-    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/exec": "6.0.3",
     "@tauri-apps/cli": "1.0.4",
     "@vitejs/plugin-vue": "3.0.0",
     "semantic-release": "19.0.3",
