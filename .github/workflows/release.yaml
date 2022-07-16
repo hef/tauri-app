@@ -60,6 +60,18 @@ jobs:
         cache: 'npm'
     - name: bump version number
       run: npm version ${{ needs.release.outputs.version }} --no-git-tag-version
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cargo/registry
+        key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
+    - uses: actions/cache@v1
+      with:
+        path: ~/.cargo/git
+        key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
+    - uses: actions/cache@v1
+      with:
+        path: target
+        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
