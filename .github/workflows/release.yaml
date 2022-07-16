@@ -18,6 +18,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
+          cache: 'npm'
           node-version: 'lts/*'
       - name: Install dependencies
         run: yarn
@@ -53,9 +54,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 16
+        cache: 'npm'
     - name: bump version number
       run: npm version ${{ needs.release.outputs.version }} --no-git-tag-version
     - name: install Rust stable
