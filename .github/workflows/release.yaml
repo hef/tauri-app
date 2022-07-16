@@ -83,8 +83,12 @@ jobs:
         sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
     - name: install app dependencies and build it
       run: yarn && yarn build
-    - run: |
-        cat <<< $(jq '.package.version="${{ needs.release.outputs.version }}"' src-tauri/tauri.conf.json) > src-tauri/tauri.conf.json
+    - name: Update src-tauri/tauri.conf.json Version
+      uses: jossef/action-set-json-field@v2
+      with:
+        file: src-tauri/tauri.conf.json
+        field: package.version
+        value: ${{ needs.release.outputs.version }}
     - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
