@@ -84,7 +84,7 @@ jobs:
     - name: install app dependencies and build it
       run: yarn && yarn build
     - run: |
-        cat <<< $(jq '.package.version="${{ needs.release.outputs.release_id }}"' src-tauri/tauri.conf.json) > src-tauri/tauri.conf.json
+        cat <<< $(jq '.package.version="${{ needs.release.outputs.version }}"' src-tauri/tauri.conf.json) > src-tauri/tauri.conf.json
     - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
