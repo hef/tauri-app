@@ -89,10 +89,9 @@ jobs:
         file: src-tauri/tauri.conf.json
         field: package.version
         value: ${{ needs.release.outputs.version }}
-      env:
-        TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
     - uses: tauri-apps/tauri-action@v0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
       with:
         releaseId: ${{ needs.release.outputs.release_id }}
