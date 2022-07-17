@@ -51,7 +51,9 @@
       "csp": null
     },
     "updater": {
-      "active": false
+      "active": true,
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY1NThDQ0JFMDM0NzkzRUQKUldUdGswY0R2c3hZWmY0ZWhCbFdwckdWSHlNNFdQY0ZjU2REL29IYUZvRSt4Vk1hdHZudDEzbHMK"
     },
     "windows": [
       {
