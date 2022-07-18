@@ -11,14 +11,15 @@ defineProps({
 
 const count = ref(0)
 const rust_count = ref(0)
-
+const rust_bumped_count = ref(0)
 
 function bumpCount() {
   invoke('bump_counter').then((value) => {rust_count.value = value})
 }
 
-listen("foo", e => {
-  console.log("foo", e.payload);
+listen("app://count", e => {
+  console.log("app://count", e);
+  rust_bumped_count.value = e.payload;
 })
 
 </script>
@@ -29,24 +30,8 @@ listen("foo", e => {
   <div class="card">
     <button type="button" @click="count++">vue count is {{ count }}</button>
     <button type="button" @click="bumpCount()">rust count is {{ rust_count }}</button>
-    <p>
-      Edit
-      <code>components/HelloWorld.vue</code> to test HMR
-    </p>
+    <div>rust counter: {{ rust_bumped_count }}</div>
   </div>
-
-  <p>
-    Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
-    >, the official Vue + Vite starter
-  </p>
-  <p>
-    Install
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>
-    in your IDE for a better DX
-  </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
 </template>
 
 <style scoped>

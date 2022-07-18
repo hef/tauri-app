@@ -3,17 +3,18 @@
     windows_subsystem = "windows"
 )]
 
-use libp2p::gossipsub;
+use libp2p::{gossipsub, Swarm};
 use libp2p::gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity};
 use libp2p::mdns::{Mdns, MdnsEvent};
 use libp2p::swarm::{NetworkBehaviourEventProcess, SwarmBuilder};
 use libp2p::NetworkBehaviour;
 use libp2p::{identity, PeerId};
 use std::sync::Mutex;
-use tauri::State;
+use tauri::{State, Manager};
 
 pub struct InnerStuff {
     pub count: i32,
+    //pub swarm: Box<Swarm<MyBehaviour>>,
 }
 
 pub struct Stuff(pub Mutex<InnerStuff>);
@@ -66,17 +67,34 @@ impl NetworkBehaviourEventProcess<MdnsEvent> for MyBehaviour {
 }
 
 fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
-    println!("hello page load!");
-    let window2 = window.clone();
     tauri::async_runtime::spawn(async move {
-        tokio::time::sleep(tokio::time::Duration::from_millis(10000)).await;
-        println!("foo: bar");
-        window2.emit("foo", "bar").unwrap();
+
+      /*window.on_window_event( |event| {
+        match event {
+            WindowEvent::Resized(_) => {},
+            WindowEvent::Moved(_) => {},
+            WindowEvent::CloseRequested { .. } => {},
+            WindowEvent::Destroyed => {},
+            WindowEvent::Focused(_) => {},
+            WindowEvent::ScaleFactorChanged { .. } => {},
+            WindowEvent::FileDrop(_) => {},
+            WindowEvent::ThemeChanged(_) => {},
+            _ => {},
+        }
+      });*/
+
+      let mut count = 0;
+
+      loop {
+        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+        count += 1;
+        window.emit("app://count", count ).unwrap();
+      }
     });
     ()
 }
 
-fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
+fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
     tauri::async_runtime::spawn(async {
         let local_key = identity::Keypair::generate_ed25519();
         let peer_id = PeerId::from(local_key.public());
@@ -99,8 +117,14 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
         };
         swarm
             .listen_on("/ip4/0.0.0.0/tcp/0".parse().unwrap())
-            .unwrap()
+            .unwrap();
+
+        
+        
+       // swarm
     });
+    let mut stuff_gaurd: State<Stuff> = app.state();
+        stuff_gaurd.0.lock().unwrap().count = 0;
     Ok(())
 }
 
