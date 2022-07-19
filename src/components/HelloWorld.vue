@@ -8,7 +8,6 @@ defineProps({
   msg: String
 })
 
-
 const count = ref(0)
 const rust_count = ref(0)
 const rust_bumped_count = ref(0)
@@ -18,7 +17,6 @@ function bumpCount() {
 }
 
 listen("app://count", e => {
-  console.log("app://count", e);
   rust_bumped_count.value = e.payload;
 })
 
