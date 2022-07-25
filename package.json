@@ -16,7 +16,7 @@
   "devDependencies": {
     "@semantic-release/exec": "6.0.3",
     "@tauri-apps/cli": "1.0.5",
-    "@vitejs/plugin-vue": "3.0.0",
+    "@vitejs/plugin-vue": "3.0.1",
     "semantic-release": "19.0.3",
     "vite": "3.0.2"
   },
