@@ -1,16 +1,22 @@
 use std::sync::Mutex;
 
+use libp2p::Swarm;
+
+use crate::{networkbehavior::MyBehaviour, swarm::build_swarm};
+
 pub struct InnerStuff {
     pub count: i32,
-    //pub swarm: Box<Swarm<MyBehaviour>>,
+    pub swarm: Swarm<MyBehaviour>,
 }
 
 pub struct Stuff(pub Mutex<InnerStuff>);
 
 
 impl Stuff {
-    pub fn new() -> Stuff {
-        Stuff(Mutex::new(InnerStuff { count: 0 }))
+    pub async fn new() -> Stuff {
+        Stuff(Mutex::new(InnerStuff {
+             count: 0, 
+             swarm: build_swarm().await,
+            }))
     }
-    
 }

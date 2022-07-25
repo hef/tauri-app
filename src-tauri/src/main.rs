@@ -8,8 +8,7 @@ mod networkbehavior;
 mod swarm;
 
 use state::Stuff;
-use swarm::build_swarm;
-use tauri::{State, Manager};
+use tauri::State;
 
 #[tauri::command]
 fn bump_counter(state: State<Stuff>) -> i32 {
@@ -52,20 +51,21 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
     ()
 }
 
-fn setup(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
-    tauri::async_runtime::spawn(async {
-        build_swarm().await
-    });
-    let stuff_gaurd: State<Stuff> = app.state();
-        stuff_gaurd.0.lock().unwrap().count = 0;
+fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
     Ok(())
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
+    
+    let stuff = Stuff::new().await;
+    
+    tauri::async_runtime::set(tokio::runtime::Handle::current());
+
     tauri::Builder::default()
         .setup(setup)
         .on_page_load(on_page_load)
-        .manage(Stuff::new())
+        .manage(stuff)
         .invoke_handler(tauri::generate_handler![bump_counter, get_counter])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
