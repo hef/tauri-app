@@ -8,7 +8,7 @@ mod networkbehavior;
 mod swarm;
 
 use state::Stuff;
-use tauri::State;
+use tauri::{State, Manager, WindowEvent};
 
 #[tauri::command]
 fn bump_counter(state: State<Stuff>) -> i32 {
@@ -26,11 +26,13 @@ fn get_counter(state: State<Stuff>) -> i32 {
 fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
     tauri::async_runtime::spawn(async move {
 
-      /*window.on_window_event( |event| {
+        let (tx, mut window_close_rx) = tokio::sync::mpsc::channel::<bool>(1);
+
+        window.on_window_event(move |event| {
         match event {
             WindowEvent::Resized(_) => {},
             WindowEvent::Moved(_) => {},
-            WindowEvent::CloseRequested { .. } => {},
+            WindowEvent::CloseRequested { .. } => { let _ = tx.send(true); },
             WindowEvent::Destroyed => {},
             WindowEvent::Focused(_) => {},
             WindowEvent::ScaleFactorChanged { .. } => {},
@@ -38,15 +40,24 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
             WindowEvent::ThemeChanged(_) => {},
             _ => {},
         }
-      });*/
+        });
 
-      let mut count = 0;
+        let mut message_rx = window.state::<Stuff>().0.lock().unwrap().tx.subscribe();
 
-      loop {
-        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
-        count += 1;
-        window.emit("app://count", count ).unwrap();
-      }
+        loop {
+            tokio::select! {
+                m = message_rx.recv() => {
+                    match m {
+                        Ok(message) => {
+                            window.emit("app://message", message).unwrap()
+                        },
+                        Err(_) => todo!(),
+                    }
+                    
+                }
+                _ = window_close_rx.recv() => { return }
+            };
+        }
     });
     ()
 }
@@ -58,8 +69,7 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 #[tokio::main]
 async fn main() {
     
-    let stuff = Stuff::new().await;
-    
+    let stuff = Stuff::new().await;    
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
     tauri::Builder::default()

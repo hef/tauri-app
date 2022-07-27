@@ -1,13 +1,14 @@
 use libp2p::{Swarm, PeerId, identity, swarm::SwarmBuilder};
+use tokio::sync::broadcast::Sender;
 
-use crate::networkbehavior::MyBehaviour;
+use crate::networkbehavior::{MyBehaviour, MyMessage};
 
-pub async fn build_swarm() -> Swarm<MyBehaviour> {
+pub async fn build_swarm(on_message: Sender<MyMessage>) -> Swarm<MyBehaviour> {
     let local_key = identity::Keypair::generate_ed25519();
     let peer_id = PeerId::from(local_key.public());
     let transport = libp2p::tokio_development_transport(local_key.clone()).unwrap();
     let mut swarm = {
-        SwarmBuilder::new(transport, MyBehaviour::new(local_key).await, peer_id)
+        SwarmBuilder::new(transport, MyBehaviour::new(local_key, on_message).await, peer_id)
             .executor(Box::new(|fut| {
                 tauri::async_runtime::spawn(fut);
             }))
