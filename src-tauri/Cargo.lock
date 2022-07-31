@@ -5782,7 +5782,7 @@ dependencies = [
 [[package]]
 name = "winrt-notification"
 version = "0.5.1"
-source = "git+https://github.com/hef/winrt-notification#2108e58f09f2a0f97838e5934a64a3af99c96baf"
+source = "git+https://github.com/hef/winrt-notification#8dd6943d5fb9b0796fc8e5d2f18cee9385b0c250"
 dependencies = [
  "strum",
  "windows 0.39.0",
