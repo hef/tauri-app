@@ -1,4 +1,4 @@
-use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, mdns::{Mdns, MdnsEvent}, swarm::NetworkBehaviourEventProcess, identity::Keypair};
+use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, swarm::NetworkBehaviourEventProcess, identity::Keypair};
 use libp2p::gossipsub;
 use serde::{Serialize, Deserialize};
 use tokio::sync::broadcast::Sender;
@@ -16,7 +16,7 @@ pub struct MyMessage {
 #[behaviour(event_process = true)]
 pub struct MyBehaviour {
     gossipsub: Gossipsub,
-    mdns: Mdns,
+    //mdns: Mdns,
     //ping: Ping,
     #[behaviour(ignore)]
     on_message: Sender<MyMessage>
@@ -29,7 +29,6 @@ impl MyBehaviour {
         .unwrap();
         MyBehaviour {
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config).unwrap(),
-            mdns: Mdns::new(Default::default()).await.unwrap(),
             on_message: on_message,
         }
     }
@@ -49,26 +48,6 @@ impl NetworkBehaviourEventProcess<GossipsubEvent> for MyBehaviour {
             GossipsubEvent::Subscribed { peer_id: _, topic: _ } => todo!(),
             GossipsubEvent::Unsubscribed { peer_id: _, topic: _ } => todo!(),
             GossipsubEvent::GossipsubNotSupported { peer_id: _ } => todo!(),
-        }
-    }
-}
-
-impl NetworkBehaviourEventProcess<MdnsEvent> for MyBehaviour {
-    fn inject_event(&mut self, event: MdnsEvent) {
-        println!("MdnsEvent: {:?}", event);
-        match event {
-            MdnsEvent::Discovered(list) => {
-                for (peer_id, multiaddr) in list {
-                    println!("Discovered: {:?} {:?}", peer_id, multiaddr);
-                    self.gossipsub.add_explicit_peer(&peer_id);
-                }
-            }
-            MdnsEvent::Expired(list) => {
-                for (peer_id, multiaddr) in list {
-                    println!("Expired: {:?} {:?}", peer_id, multiaddr);
-                    self.gossipsub.remove_explicit_peer(&peer_id);
-                }
-            }
         }
     }
 }
