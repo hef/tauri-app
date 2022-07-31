@@ -21,6 +21,9 @@ tauri = { version = "1.0.5", features = ["api-all", "updater"] }
 tokio = { version = "1.20.1", features = ["time", "macros"] }
 libp2p = { version = "0.46.1", features = ["tcp-tokio", "dns-tokio"] }
 
+[patch.crates-io]
+winrt-notification = { git = "https://github.com/hef/winrt-notification" }
+
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
