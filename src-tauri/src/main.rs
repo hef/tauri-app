@@ -63,7 +63,7 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
             };
         }
     });
-    ()
+    
 }
 
 fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {

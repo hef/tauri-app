@@ -1,7 +1,7 @@
 use std::sync::Mutex;
 
 use libp2p::{Swarm};
-use tokio::sync::broadcast::{self, Sender};
+use tokio::sync::broadcast::{self};
 use tokio::sync::mpsc;
 use crate::state::broadcast::Receiver;
 

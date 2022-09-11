@@ -41,7 +41,7 @@ impl MyBehaviour {
         .unwrap();
         MyBehaviour {
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config).unwrap(),
-            on_message: on_message,
+            on_message,
         }
     }
 
@@ -49,7 +49,7 @@ impl MyBehaviour {
         let mut rx = self.on_message.subscribe();
 
         loop {
-            let m = rx.recv().await.unwrap();
+            let _m = rx.recv().await.unwrap();
         }
     }
 }
