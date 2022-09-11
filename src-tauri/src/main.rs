@@ -18,6 +18,11 @@ fn bump_counter(state: State<Stuff>) -> i32 {
 }
 
 #[tauri::command]
+fn send_message(state: State<Stuff>, message: String) {
+    state.send_message(message);
+}
+
+#[tauri::command]
 fn get_counter(state: State<Stuff>) -> i32 {
     let stuff_gaurd = state.0.lock().unwrap();
     stuff_gaurd.count
@@ -53,7 +58,6 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
                         },
                         Err(_) => todo!(),
                     }
-                    
                 }
                 _ = window_close_rx.recv() => { return }
             };
@@ -68,15 +72,16 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 
 #[tokio::main]
 async fn main() {
-    
-    let stuff = Stuff::new().await;    
+
     tauri::async_runtime::set(tokio::runtime::Handle::current());
+
+    let stuff = Stuff::new().await;
 
     tauri::Builder::default()
         .setup(setup)
         .on_page_load(on_page_load)
         .manage(stuff)
-        .invoke_handler(tauri::generate_handler![bump_counter, get_counter])
+        .invoke_handler(tauri::generate_handler![bump_counter, get_counter, send_message])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

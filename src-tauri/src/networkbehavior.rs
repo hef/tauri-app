@@ -11,6 +11,18 @@ pub struct MyMessage {
     data: String,
 }
 
+impl MyMessage {
+    pub fn new(message: String) -> Self {
+        Self {
+            message_id: String::from("7"),
+            topic: String::from("topic"),
+            source: String::from("x"),
+            data: message,
+            
+        }
+    }
+}
+
 
 #[derive(NetworkBehaviour)]
 #[behaviour(event_process = true)]
@@ -30,6 +42,14 @@ impl MyBehaviour {
         MyBehaviour {
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config).unwrap(),
             on_message: on_message,
+        }
+    }
+
+    pub async fn run(&mut self) {
+        let mut rx = self.on_message.subscribe();
+
+        loop {
+            let m = rx.recv().await.unwrap();
         }
     }
 }

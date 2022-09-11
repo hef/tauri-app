@@ -48,7 +48,8 @@
       }
     },
     "security": {
-      "csp": null
+      "csp": null,
+      "freezePrototype": true
     },
     "updater": {
       "active": true,
