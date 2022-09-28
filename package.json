@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@tauri-apps/api": "1.0.2",
-    "vue": "3.2.39"
+    "vue": "3.2.40"
   },
   "devDependencies": {
     "@semantic-release/exec": "6.0.3",
