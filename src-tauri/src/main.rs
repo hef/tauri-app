@@ -11,8 +11,9 @@ use state::Stuff;
 use tauri::{State, Manager, WindowEvent};
 
 #[tauri::command]
-fn send_message(state: State<Stuff>, message: String) {
-    state.send_message(message);
+async fn send_message(state: State<'_, Stuff>, message: String) -> Result<(), ()>{
+    state.send_message(message).await;
+    Ok(())
 }
 
 fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {

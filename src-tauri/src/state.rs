@@ -2,7 +2,7 @@
 use libp2p::futures::StreamExt;
 use libp2p::gossipsub::{IdentTopic, GossipsubEvent};
 use libp2p::swarm::SwarmEvent;
-use libp2p::{Swarm, gossipsub};
+use libp2p::Swarm;
 use tokio::sync::{mpsc, broadcast};
 use crate::networkbehavior::MyBehaviourEvent;
 use crate::state::broadcast::Receiver;
@@ -27,7 +27,7 @@ impl InnerStuff {
                     }
                 },
                 event = self.swarm.select_next_some() => match event {
-                    SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(GossipsubEvent::Message{propagation_source,message_id,message}))=>{
+                    SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(GossipsubEvent::Message{propagation_source: _,message_id: _,message}))=>{
                         let s = String::from_utf8_lossy(&message.data);
                         self.tx.send(MyMessage::new(s.to_string())).unwrap();
                     }

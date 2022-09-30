@@ -1,7 +1,6 @@
 use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, identity::Keypair};
 use libp2p::gossipsub;
 use serde::{Serialize, Deserialize};
-use tokio::sync::broadcast::Sender;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyMessage {
