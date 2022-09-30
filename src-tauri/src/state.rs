@@ -1,22 +1,48 @@
-use std::sync::Mutex;
 
-use libp2p::{Swarm};
-use tokio::sync::broadcast::{self};
-use tokio::sync::mpsc;
+use libp2p::futures::StreamExt;
+use libp2p::gossipsub::{IdentTopic, GossipsubEvent};
+use libp2p::swarm::SwarmEvent;
+use libp2p::{Swarm, gossipsub};
+use tokio::sync::{mpsc, broadcast};
+use crate::networkbehavior::MyBehaviourEvent;
 use crate::state::broadcast::Receiver;
 
 use crate::{networkbehavior::{MyBehaviour, MyMessage}, swarm::build_swarm, };
 
 pub struct InnerStuff {
-    pub count: i32,
     pub swarm: Swarm<MyBehaviour>,
-    pub tx: broadcast::Sender<MyMessage>,
-    pub tx2: mpsc::Sender<MyMessage>,
-    pub rx2: mpsc::Receiver<MyMessage>,
-
+    tx: broadcast::Sender<MyMessage>,
+    rx: mpsc::Receiver<MyMessage>,
 }
 
-pub struct Stuff(pub Mutex<InnerStuff>);
+impl InnerStuff {
+    pub async fn run(mut self) -> ! {
+        let topic = IdentTopic::new("chat");
+        loop{
+            tokio::select! {
+                Some(message) = self.rx.recv() => {
+                    if let Err(e) = self.swarm.behaviour_mut().gossipsub.publish(topic.clone(), message.get_data())
+                    {
+                        println!("publish error: {:?}", e);
+                    }
+                },
+                event = self.swarm.select_next_some() => match event {
+                    SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(GossipsubEvent::Message{propagation_source,message_id,message}))=>{
+                        let s = String::from_utf8_lossy(&message.data);
+                        self.tx.send(MyMessage::new(s.to_string())).unwrap();
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+}
+
+pub struct Stuff
+{
+    pub tx: broadcast::Sender<MyMessage>,
+    pub tx2: mpsc::Sender<MyMessage>,
+}
 
 impl Stuff {
     pub async fn new() -> Stuff {
@@ -24,21 +50,30 @@ impl Stuff {
         let (tx, _rx ) = broadcast::channel(2);
         let (tx2, rx2) = mpsc::channel(2);
 
-        Stuff(Mutex::new(InnerStuff {
-             count: 0, 
-             swarm: build_swarm(tx.clone()).await,
-             tx,
-             tx2,
-             rx2,
-            }))
+        let s = Stuff {
+            tx: tx.clone(),
+            tx2,
+        };
+
+        let inner_stuff = InnerStuff {
+            swarm: build_swarm().await,
+            tx,
+            rx: rx2,
+        };
+
+        tokio::spawn(async move {
+            inner_stuff.run().await;
+        });
+
+        return s;
     }
 
     pub fn on_message(&self) -> Receiver<MyMessage>{
-        self.0.lock().unwrap().tx.subscribe()
+        self.tx.subscribe()
     }
 
     pub async fn send_message(&self, message: String) {
         let m = MyMessage::new(message);
-        self.0.lock().unwrap().tx2.send(m).await.unwrap();
+        self.tx2.send(m).await.unwrap();
     }
 }

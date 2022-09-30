@@ -11,21 +11,8 @@ use state::Stuff;
 use tauri::{State, Manager, WindowEvent};
 
 #[tauri::command]
-fn bump_counter(state: State<Stuff>) -> i32 {
-    let mut stuff_gaurd = state.0.lock().unwrap();
-    stuff_gaurd.count += 1;
-    stuff_gaurd.count
-}
-
-#[tauri::command]
 fn send_message(state: State<Stuff>, message: String) {
     state.send_message(message);
-}
-
-#[tauri::command]
-fn get_counter(state: State<Stuff>) -> i32 {
-    let stuff_gaurd = state.0.lock().unwrap();
-    stuff_gaurd.count
 }
 
 fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
@@ -47,7 +34,7 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
         }
         });
 
-        let mut message_rx = window.state::<Stuff>().0.lock().unwrap().tx.subscribe();
+        let mut message_rx = window.state::<Stuff>().on_message();
 
         loop {
             tokio::select! {
@@ -81,7 +68,7 @@ async fn main() {
         .setup(setup)
         .on_page_load(on_page_load)
         .manage(stuff)
-        .invoke_handler(tauri::generate_handler![bump_counter, get_counter, send_message])
+        .invoke_handler(tauri::generate_handler![send_message])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

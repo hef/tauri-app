@@ -1,4 +1,4 @@
-use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, swarm::NetworkBehaviourEventProcess, identity::Keypair};
+use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, identity::Keypair};
 use libp2p::gossipsub;
 use serde::{Serialize, Deserialize};
 use tokio::sync::broadcast::Sender;
@@ -21,53 +21,57 @@ impl MyMessage {
             
         }
     }
+
+    pub fn get_data(self) -> String {
+        return self.data
+    }
 }
 
-
 #[derive(NetworkBehaviour)]
-#[behaviour(event_process = true)]
+#[behaviour(out_event = "MyBehaviourEvent")]
 pub struct MyBehaviour {
-    gossipsub: Gossipsub,
+    pub gossipsub: Gossipsub,
     //mdns: Mdns,
     //ping: Ping,
-    #[behaviour(ignore)]
-    on_message: Sender<MyMessage>
+
+    //#[behaviour(ignore)]
+    //on_message: Sender<MyMessage>
+}
+
+#[derive(Debug)]
+pub enum MyBehaviourEvent {
+    Gossipsub(GossipsubEvent),
 }
 
 impl MyBehaviour {
-    pub async fn new(local_key: Keypair, on_message: Sender<MyMessage>) -> MyBehaviour {
+    pub async fn new(local_key: Keypair) -> MyBehaviour {
         let gossipsub_config = gossipsub::GossipsubConfigBuilder::default()
         .build()
         .unwrap();
         MyBehaviour {
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config).unwrap(),
-            on_message,
-        }
-    }
-
-    pub async fn run(&mut self) {
-        let mut rx = self.on_message.subscribe();
-
-        loop {
-            let _m = rx.recv().await.unwrap();
         }
     }
 }
 
-impl NetworkBehaviourEventProcess<GossipsubEvent> for MyBehaviour {
-    fn inject_event(&mut self, event: GossipsubEvent) {
-        match event {
-            GossipsubEvent::Message { propagation_source: _, message_id, message } => {
-                self.on_message.send(MyMessage{
-                    message_id: message_id.to_string(),
-                    topic: message.topic.into_string(),
-                    source: message.source.unwrap().to_string(),
-                    data: String::from(std::str::from_utf8(&message.data).unwrap()),
-                }).unwrap();
-            },
-            GossipsubEvent::Subscribed { peer_id: _, topic: _ } => todo!(),
-            GossipsubEvent::Unsubscribed { peer_id: _, topic: _ } => todo!(),
-            GossipsubEvent::GossipsubNotSupported { peer_id: _ } => todo!(),
-        }
+impl From<GossipsubEvent> for MyBehaviourEvent {
+    fn from(event: GossipsubEvent) -> Self {
+       MyBehaviourEvent::Gossipsub(event)
     }
 }
+
+
+/*  match event {
+GossipsubEvent::Message { propagation_source: _, message_id, message } => {
+    self.on_message.send(MyMessage{
+        message_id: message_id.to_string(),
+        topic: message.topic.into_string(),
+        source: message.source.unwrap().to_string(),
+        data: String::from(std::str::from_utf8(&message.data).unwrap()),
+    }).unwrap();
+},
+GossipsubEvent::Subscribed { peer_id: _, topic: _ } => todo!(),
+GossipsubEvent::Unsubscribed { peer_id: _, topic: _ } => todo!(),
+GossipsubEvent::GossipsubNotSupported { peer_id: _ } => todo!(),
+}
+*/
