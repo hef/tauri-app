@@ -1,6 +1,10 @@
-use libp2p::{NetworkBehaviour, gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity}, identity::Keypair};
 use libp2p::gossipsub;
-use serde::{Serialize, Deserialize};
+use libp2p::{
+    gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity},
+    identity::Keypair,
+    NetworkBehaviour,
+};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MyMessage {
@@ -17,12 +21,11 @@ impl MyMessage {
             topic: String::from("topic"),
             source: String::from("x"),
             data: message,
-            
         }
     }
 
     pub fn get_data(self) -> String {
-        return self.data
+        return self.data;
     }
 }
 
@@ -45,20 +48,20 @@ pub enum MyBehaviourEvent {
 impl MyBehaviour {
     pub async fn new(local_key: Keypair) -> MyBehaviour {
         let gossipsub_config = gossipsub::GossipsubConfigBuilder::default()
-        .build()
-        .unwrap();
+            .build()
+            .unwrap();
         MyBehaviour {
-            gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config).unwrap(),
+            gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
+                .unwrap(),
         }
     }
 }
 
 impl From<GossipsubEvent> for MyBehaviourEvent {
     fn from(event: GossipsubEvent) -> Self {
-       MyBehaviourEvent::Gossipsub(event)
+        MyBehaviourEvent::Gossipsub(event)
     }
 }
-
 
 /*  match event {
 GossipsubEvent::Message { propagation_source: _, message_id, message } => {

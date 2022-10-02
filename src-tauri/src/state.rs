@@ -1,13 +1,15 @@
-
-use libp2p::futures::StreamExt;
-use libp2p::gossipsub::{IdentTopic, GossipsubEvent};
-use libp2p::swarm::SwarmEvent;
-use libp2p::Swarm;
-use tokio::sync::{mpsc, broadcast};
 use crate::networkbehavior::MyBehaviourEvent;
 use crate::state::broadcast::Receiver;
+use libp2p::futures::StreamExt;
+use libp2p::gossipsub::{GossipsubEvent, IdentTopic};
+use libp2p::swarm::SwarmEvent;
+use libp2p::Swarm;
+use tokio::sync::{broadcast, mpsc};
 
-use crate::{networkbehavior::{MyBehaviour, MyMessage}, swarm::build_swarm, };
+use crate::{
+    networkbehavior::{MyBehaviour, MyMessage},
+    swarm::build_swarm,
+};
 
 pub struct InnerStuff {
     pub swarm: Swarm<MyBehaviour>,
@@ -18,7 +20,7 @@ pub struct InnerStuff {
 impl InnerStuff {
     pub async fn run(mut self) -> ! {
         let topic = IdentTopic::new("chat");
-        loop{
+        loop {
             tokio::select! {
                 Some(message) = self.rx.recv() => {
                     if let Err(e) = self.swarm.behaviour_mut().gossipsub.publish(topic.clone(), message.get_data())
@@ -38,16 +40,14 @@ impl InnerStuff {
     }
 }
 
-pub struct Stuff
-{
+pub struct Stuff {
     pub tx: broadcast::Sender<MyMessage>,
     pub tx2: mpsc::Sender<MyMessage>,
 }
 
 impl Stuff {
-    pub async fn new() -> Stuff {
-
-        let (tx, _rx ) = broadcast::channel(2);
+    pub async fn new(port: u32) -> Stuff {
+        let (tx, _rx) = broadcast::channel(2);
         let (tx2, rx2) = mpsc::channel(2);
 
         let s = Stuff {
@@ -56,7 +56,7 @@ impl Stuff {
         };
 
         let inner_stuff = InnerStuff {
-            swarm: build_swarm().await,
+            swarm: build_swarm(port).await,
             tx,
             rx: rx2,
         };
@@ -68,7 +68,7 @@ impl Stuff {
         return s;
     }
 
-    pub fn on_message(&self) -> Receiver<MyMessage>{
+    pub fn on_message(&self) -> Receiver<MyMessage> {
         self.tx.subscribe()
     }
 

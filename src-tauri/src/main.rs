@@ -3,36 +3,35 @@
     windows_subsystem = "windows"
 )]
 
-mod state;
 mod networkbehavior;
+mod state;
 mod swarm;
 
 use state::Stuff;
-use tauri::{State, Manager, WindowEvent};
+use tauri::{Manager, State, WindowEvent};
 
 #[tauri::command]
-async fn send_message(state: State<'_, Stuff>, message: String) -> Result<(), ()>{
+async fn send_message(state: State<'_, Stuff>, message: String) -> Result<(), ()> {
     state.send_message(message).await;
     Ok(())
 }
 
 fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
     tauri::async_runtime::spawn(async move {
-
         let (tx, mut window_close_rx) = tokio::sync::mpsc::channel::<bool>(1);
 
-        window.on_window_event(move |event| {
-        match event {
-            WindowEvent::Resized(_) => {},
-            WindowEvent::Moved(_) => {},
-            WindowEvent::CloseRequested { .. } => { let _ = tx.send(true); },
-            WindowEvent::Destroyed => {},
-            WindowEvent::Focused(_) => {},
-            WindowEvent::ScaleFactorChanged { .. } => {},
-            WindowEvent::FileDrop(_) => {},
-            WindowEvent::ThemeChanged(_) => {},
-            _ => {},
-        }
+        window.on_window_event(move |event| match event {
+            WindowEvent::Resized(_) => {}
+            WindowEvent::Moved(_) => {}
+            WindowEvent::CloseRequested { .. } => {
+                let _ = tx.send(true);
+            }
+            WindowEvent::Destroyed => {}
+            WindowEvent::Focused(_) => {}
+            WindowEvent::ScaleFactorChanged { .. } => {}
+            WindowEvent::FileDrop(_) => {}
+            WindowEvent::ThemeChanged(_) => {}
+            _ => {}
         });
 
         let mut message_rx = window.state::<Stuff>().on_message();
@@ -51,7 +50,6 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
             };
         }
     });
-    
 }
 
 fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'static>> {
@@ -60,10 +58,9 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 
 #[tokio::main]
 async fn main() {
-
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
-    let stuff = Stuff::new().await;
+    let stuff = Stuff::new(0).await;
 
     tauri::Builder::default()
         .setup(setup)
