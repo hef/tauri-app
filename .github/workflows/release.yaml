@@ -99,3 +99,29 @@ jobs:
         TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
       with:
         releaseId: ${{ needs.release.outputs.release_id }}
+
+  build-server:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Log in to the Container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: src-tauri
+        push: ${{ github.event_name != 'pull_request' }}
+        tags: ghcr.io/${{ github.repository }}/server:${{ needs.release.outputs.version }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+
