@@ -1,8 +1,8 @@
 use std::{env, os::unix::prelude::OsStrExt};
 use app::state::Stuff;
-//use app::state::Stuff;
 use tokio::time::{sleep, Duration};
 
+#[cfg(not(target_family = "windows"))]
 #[tokio::main]
 async fn main() {
 
@@ -17,4 +17,9 @@ async fn main() {
 
     Stuff::new(identity, 4001).await;
     sleep(Duration::from_secs(u64::MAX)).await;
+}
+
+#[cfg(target_family = "windows")]
+fn main() {
+    println!("not implemented");
 }
