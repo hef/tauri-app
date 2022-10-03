@@ -66,7 +66,7 @@ impl Stuff {
             inner_stuff.run().await;
         });
 
-        return s;
+        s
     }
 
     pub fn on_message(&self) -> Receiver<MyMessage> {

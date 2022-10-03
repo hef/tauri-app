@@ -25,7 +25,7 @@ impl MyMessage {
     }
 
     pub fn get_data(self) -> String {
-        return self.data;
+        self.data
     }
 }
 
