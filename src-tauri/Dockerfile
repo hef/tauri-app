@@ -7,6 +7,6 @@ COPY . .
 
 RUN cargo install --path . --bin server
 
-FROM debian:buster
+FROM debian:bullseye
 COPY --from=builder /usr/local/cargo/bin/server /usr/local/bin/
 CMD ["server"]
