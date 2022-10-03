@@ -2,6 +2,7 @@ use crate::networkbehavior::MyBehaviourEvent;
 use crate::state::broadcast::Receiver;
 use libp2p::futures::StreamExt;
 use libp2p::gossipsub::{GossipsubEvent, IdentTopic};
+use libp2p::identity::Keypair;
 use libp2p::swarm::SwarmEvent;
 use libp2p::Swarm;
 use tokio::sync::{broadcast, mpsc};
@@ -46,7 +47,7 @@ pub struct Stuff {
 }
 
 impl Stuff {
-    pub async fn new(port: u32) -> Stuff {
+    pub async fn new(identity: Keypair, port: u32) -> Stuff {
         let (tx, _rx) = broadcast::channel(2);
         let (tx2, rx2) = mpsc::channel(2);
 
@@ -56,7 +57,7 @@ impl Stuff {
         };
 
         let inner_stuff = InnerStuff {
-            swarm: build_swarm(port).await,
+            swarm: build_swarm(identity, port).await,
             tx,
             rx: rx2,
         };

@@ -7,6 +7,7 @@ mod networkbehavior;
 mod state;
 mod swarm;
 
+use libp2p::identity::Keypair;
 use state::Stuff;
 use tauri::{Manager, State, WindowEvent};
 
@@ -60,7 +61,7 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 async fn main() {
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
-    let stuff = Stuff::new(0).await;
+    let stuff = Stuff::new(Keypair::generate_ed25519(), 0).await;
 
     tauri::Builder::default()
         .setup(setup)
