@@ -6,7 +6,7 @@ use tokio::time::{sleep, Duration};
 #[tokio::main]
 async fn main() {
 
-    let mut identity : libp2p::identity::Keypair;
+    let identity : libp2p::identity::Keypair;
     let x = env::var_os("SERVER_IDENTITY");
     if let Some(y) = x {
         let mut z = y.as_bytes().to_vec();
