@@ -7,10 +7,10 @@ use tokio::time::{sleep, Duration};
 async fn main() {
 
     let identity : libp2p::identity::Keypair;
-    let x = env::var_os("SERVER_IDENTITY");
-    if let Some(y) = x {
-        let mut z = y.as_bytes().to_vec();
-        identity = libp2p::identity::Keypair::Ed25519(libp2p::identity::ed25519::Keypair::decode(&mut z).unwrap());
+    let server_identity_env_var = env::var_os("SERVER_IDENTITY");
+    if let Some(server_identity) = server_identity_env_var {
+        let mut server_identity_copy = server_identity.as_bytes().to_vec();
+        identity = libp2p::identity::Keypair::Ed25519(libp2p::identity::ed25519::Keypair::decode(&mut server_identity_copy).unwrap());
 
     } else {
         identity = libp2p::identity::Keypair::generate_ed25519();
