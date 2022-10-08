@@ -19,7 +19,8 @@ async fn main() {
         identity = libp2p::identity::Keypair::generate_ed25519();
     }
 
-    Stuff::new(identity, 4001).await;
+    let s = Stuff::new(identity, 4001).await;
+    println!("peer id: {:?}", s.peer_id);
     sleep(Duration::from_secs(u64::MAX)).await;
 }
 
