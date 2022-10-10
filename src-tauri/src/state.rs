@@ -44,7 +44,7 @@ impl InnerStuff {
 pub struct Stuff {
     pub tx: broadcast::Sender<MyMessage>,
     pub tx2: mpsc::Sender<MyMessage>,
-    pub peer_id: String
+    pub peer_id: String,
 }
 
 impl Stuff {
@@ -53,18 +53,14 @@ impl Stuff {
         let (tx2, rx2) = mpsc::channel(2);
 
         let swarm = build_swarm(identity, port).await;
-     
+
         let s = Stuff {
             tx: tx.clone(),
             tx2,
             peer_id: swarm.local_peer_id().to_string(),
         };
 
-        let inner_stuff = InnerStuff {
-            swarm,
-            tx,
-            rx: rx2,
-        };
+        let inner_stuff = InnerStuff { swarm, tx, rx: rx2 };
 
         tokio::spawn(async move {
             inner_stuff.run().await;
@@ -81,5 +77,4 @@ impl Stuff {
         let m = MyMessage::new(message);
         self.tx2.send(m).await.unwrap();
     }
-
 }
