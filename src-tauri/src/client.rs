@@ -9,7 +9,7 @@ use tokio::sync::{
 
 pub struct Client {
     pub tx: broadcast::Sender<MyMessage>,
-    pub tx2: mpsc::Sender<MyMessage>,
+    pub sender: mpsc::Sender<MyMessage>,
     pub peer_id: String,
 }
 
@@ -22,7 +22,7 @@ impl Client {
 
         let c = Client {
             tx: tx.clone(),
-            tx2,
+            sender: tx2,
             peer_id: swarm.local_peer_id().to_string(),
         };
 
@@ -37,6 +37,6 @@ impl Client {
 
     pub async fn send_message(&self, message: String) {
         let m = MyMessage::new(message);
-        self.tx2.send(m).await.unwrap();
+        self.sender.send(m).await.unwrap();
     }
 }
