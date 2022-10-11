@@ -62,18 +62,3 @@ impl From<GossipsubEvent> for MyBehaviourEvent {
         MyBehaviourEvent::Gossipsub(event)
     }
 }
-
-/*  match event {
-GossipsubEvent::Message { propagation_source: _, message_id, message } => {
-    self.on_message.send(MyMessage{
-        message_id: message_id.to_string(),
-        topic: message.topic.into_string(),
-        source: message.source.unwrap().to_string(),
-        data: String::from(std::str::from_utf8(&message.data).unwrap()),
-    }).unwrap();
-},
-GossipsubEvent::Subscribed { peer_id: _, topic: _ } => todo!(),
-GossipsubEvent::Unsubscribed { peer_id: _, topic: _ } => todo!(),
-GossipsubEvent::GossipsubNotSupported { peer_id: _ } => todo!(),
-}
-*/

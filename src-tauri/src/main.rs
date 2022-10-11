@@ -3,16 +3,17 @@
     windows_subsystem = "windows"
 )]
 
+mod client;
+mod eventloop;
 mod networkbehavior;
-mod state;
 mod swarm;
 
+use client::Client;
 use libp2p::identity::Keypair;
-use state::Stuff;
 use tauri::{Manager, State, WindowEvent};
 
 #[tauri::command]
-async fn send_message(state: State<'_, Stuff>, message: String) -> Result<(), ()> {
+async fn send_message(state: State<'_, Client>, message: String) -> Result<(), ()> {
     state.send_message(message).await;
     Ok(())
 }
@@ -35,7 +36,7 @@ fn on_page_load(window: tauri::window::Window, _: tauri::PageLoadPayload) {
             _ => {}
         });
 
-        let mut message_rx = window.state::<Stuff>().on_message();
+        let mut message_rx = window.state::<Client>().on_message();
 
         loop {
             tokio::select! {
@@ -61,12 +62,14 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 async fn main() {
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
-    let stuff = Stuff::new(Keypair::generate_ed25519(), 0).await;
+    let (client, event_loop) = Client::new(Keypair::generate_ed25519(), 0).await;
+
+    tokio::spawn(event_loop.run());
 
     tauri::Builder::default()
         .setup(setup)
         .on_page_load(on_page_load)
-        .manage(stuff)
+        .manage(client)
         .invoke_handler(tauri::generate_handler![send_message])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

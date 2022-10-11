@@ -1,3 +1,4 @@
-pub mod networkbehavior;
-pub mod state;
+pub mod client;
+mod eventloop;
+mod networkbehavior;
 pub mod swarm;
