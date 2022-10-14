@@ -1,8 +1,12 @@
-use libp2p::gossipsub;
+use libp2p::identify::{Identify, IdentifyEvent, IdentifyConfig};
+use libp2p::{gossipsub};
+use libp2p::kad::store::MemoryStore;
+use libp2p::kad::{Kademlia, KademliaEvent};
 use libp2p::{
     gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity},
     identity::Keypair,
     NetworkBehaviour,
+    identify,
 };
 use serde::{Deserialize, Serialize};
 
@@ -33,26 +37,29 @@ impl MyMessage {
 #[behaviour(out_event = "MyBehaviourEvent")]
 pub struct MyBehaviour {
     pub gossipsub: Gossipsub,
-    //mdns: Mdns,
-    //ping: Ping,
-
-    //#[behaviour(ignore)]
-    //on_message: Sender<MyMessage>
+    pub kademlia: Kademlia<MemoryStore>,
+    identify: Identify,
+    
 }
 
 #[derive(Debug)]
 pub enum MyBehaviourEvent {
     Gossipsub(GossipsubEvent),
+    Kademlia(KademliaEvent),
+    Identify(IdentifyEvent)
 }
 
 impl MyBehaviour {
-    pub async fn new(local_key: Keypair) -> MyBehaviour {
+    pub async fn new(local_key: Keypair) -> Self {
         let gossipsub_config = gossipsub::GossipsubConfigBuilder::default()
             .build()
             .unwrap();
-        MyBehaviour {
+        let store = MemoryStore::new(local_key.clone().public().to_peer_id());
+        Self {
+            kademlia: Kademlia::new(local_key.public().to_peer_id(), store),
+            identify: Identify::new(IdentifyConfig::new("/app/0.0.0".into(), local_key.public())),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
-                .unwrap(),
+            .unwrap(),
         }
     }
 }
@@ -60,5 +67,17 @@ impl MyBehaviour {
 impl From<GossipsubEvent> for MyBehaviourEvent {
     fn from(event: GossipsubEvent) -> Self {
         MyBehaviourEvent::Gossipsub(event)
+    }
+}
+
+impl From<KademliaEvent> for MyBehaviourEvent {
+    fn from(event: KademliaEvent) -> Self {
+        MyBehaviourEvent::Kademlia(event)
+    }
+}
+
+impl From<identify::IdentifyEvent> for MyBehaviourEvent {
+    fn from(event: identify::IdentifyEvent) -> Self {
+        MyBehaviourEvent::Identify(event)
     }
 }
