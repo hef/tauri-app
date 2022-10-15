@@ -36,6 +36,7 @@ tauri = { version = "1.1.1", features = ["api-all", "updater"] }
 tokio = { version = "1.21.2", features = ["time", "macros"] }
 libp2p = { version = "0.48.0", features = ["tcp-tokio", "dns-tokio"] }
 base64 = "0.13.0"
+env_logger = "0.9.1"
 
 [patch.crates-io]
 winrt-notification = { git = "https://github.com/hef/winrt-notification", rev="ea08c23590a9012406b7f9d55b0c37ce275ccb3b" }

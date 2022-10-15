@@ -60,6 +60,8 @@ fn setup(_app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error + 'stati
 
 #[tokio::main]
 async fn main() {
+    env_logger::init();
+
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
     let (client, event_loop) = Client::new(Keypair::generate_ed25519(), 0).await;

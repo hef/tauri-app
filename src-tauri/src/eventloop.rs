@@ -29,11 +29,29 @@ impl EventLoop {
     pub async fn run(mut self) -> ! {
         let topic = IdentTopic::new("chat");
 
-        let bootaddr = Multiaddr::from_str("/dnsaddr/server.hef.wtf").unwrap();
+        let success = self.swarm.behaviour_mut().gossipsub.subscribe(&topic);
+        match success {
+            Ok(b) => {
+                println!("subscribed: {b}");
+            }
+            Err(e) => {
+                println!("error subscribing: {e}");
+            }
+        }
+
+        let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
         self.swarm.behaviour_mut().kademlia.add_address(
             &PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(),
             bootaddr,
         );
+
+        let to_search: PeerId = "12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM"
+            .parse()
+            .unwrap();
+        self.swarm
+            .behaviour_mut()
+            .kademlia
+            .get_closest_peers(to_search);
 
         loop {
             tokio::select! {
