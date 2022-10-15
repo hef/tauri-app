@@ -1,12 +1,12 @@
-use libp2p::identify::{Identify, IdentifyEvent, IdentifyConfig};
-use libp2p::{gossipsub};
+use libp2p::gossipsub;
+use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::kad::store::MemoryStore;
 use libp2p::kad::{Kademlia, KademliaEvent};
 use libp2p::{
     gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity},
+    identify,
     identity::Keypair,
     NetworkBehaviour,
-    identify,
 };
 use serde::{Deserialize, Serialize};
 
@@ -39,14 +39,13 @@ pub struct MyBehaviour {
     pub gossipsub: Gossipsub,
     pub kademlia: Kademlia<MemoryStore>,
     identify: Identify,
-    
 }
 
 #[derive(Debug)]
 pub enum MyBehaviourEvent {
     Gossipsub(GossipsubEvent),
     Kademlia(KademliaEvent),
-    Identify(IdentifyEvent)
+    Identify(IdentifyEvent),
 }
 
 impl MyBehaviour {
@@ -59,7 +58,7 @@ impl MyBehaviour {
             kademlia: Kademlia::new(local_key.public().to_peer_id(), store),
             identify: Identify::new(IdentifyConfig::new("/app/0.0.0".into(), local_key.public())),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
-            .unwrap(),
+                .unwrap(),
         }
     }
 }

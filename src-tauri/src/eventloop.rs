@@ -3,8 +3,9 @@ use std::str::FromStr;
 use libp2p::{
     futures::StreamExt,
     gossipsub::{GossipsubEvent, IdentTopic},
+    identify::IdentifyEvent,
     swarm::SwarmEvent,
-    Swarm, identify::{IdentifyEvent}, PeerId, Multiaddr,
+    Multiaddr, PeerId, Swarm,
 };
 use tokio::sync::{broadcast, mpsc};
 
@@ -29,7 +30,10 @@ impl EventLoop {
         let topic = IdentTopic::new("chat");
 
         let bootaddr = Multiaddr::from_str("/dnsaddr/server.hef.wtf").unwrap();
-        self.swarm.behaviour_mut().kademlia.add_address(&PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(), bootaddr);
+        self.swarm.behaviour_mut().kademlia.add_address(
+            &PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(),
+            bootaddr,
+        );
 
         loop {
             tokio::select! {
@@ -60,7 +64,37 @@ impl EventLoop {
                     },
                     SwarmEvent::NewListenAddr { listener_id, address } => {
                         println!("listener_id: {:?}, address: {:?}", listener_id, address);
-                    }
+                    },
+                    SwarmEvent::ConnectionEstablished { peer_id, endpoint, num_established, concurrent_dial_errors } => {
+                        println!("connection established: {peer_id}, {endpoint:?}, {num_established}, {concurrent_dial_errors:?}");
+                    },
+                    SwarmEvent::ConnectionClosed { peer_id, endpoint, num_established, cause } => {
+                        println!("connection closed: {peer_id},{endpoint:?}, {num_established}, {cause:?}")
+                    },
+                    SwarmEvent::IncomingConnection { local_addr, send_back_addr } => {
+                        println!("Incoming Connection: {local_addr}, {send_back_addr}");
+                    },
+                    SwarmEvent::IncomingConnectionError { local_addr, send_back_addr, error } => {
+                        println!("Incoming Connection Error: {local_addr}, {send_back_addr}, {error}");
+                    },
+                    SwarmEvent::OutgoingConnectionError { peer_id, error } => {
+                        println!("Outgoing Conneciton Error: {peer_id:?}, {error}");
+                    },
+                    SwarmEvent::BannedPeer { peer_id, endpoint } => {
+                        println!("Banned Peer: {peer_id}, {endpoint:?}");
+                    },
+                    SwarmEvent::ExpiredListenAddr { listener_id, address } => {
+                        println!{"Expired Listener Addr: {listener_id:?}, {address}"};
+                    },
+                    SwarmEvent::ListenerClosed { listener_id, addresses, reason } => {
+                        println!("Listener Close: {listener_id:?}, {addresses:?}, {reason:?}");
+                    },
+                    SwarmEvent::ListenerError { listener_id, error } => {
+                        println!("listener error: {listener_id:?}, {error}");
+                    },
+                    SwarmEvent::Dialing(p) => {
+                        println!("Dialing: {p}");
+                    },
                     _ => {}
                 }
             }
