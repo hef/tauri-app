@@ -39,8 +39,9 @@ impl EventLoop {
             }
         }
 
-        //let bootaddr = Multiaddr::from_str("/dns4/server.hef.wtf/tcp/4001").unwrap();
-        let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
+        let bootaddr = Multiaddr::from_str("/dns4/server.hef.wtf/tcp/4001").unwrap();
+        //let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
+        //let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
         self.swarm.behaviour_mut().kademlia.add_address(
             &PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(),
             bootaddr,
@@ -65,7 +66,12 @@ impl EventLoop {
                 event = self.swarm.select_next_some() => match event {
                     SwarmEvent::Behaviour(MyBehaviourEvent::Gossipsub(GossipsubEvent::Message{propagation_source: peer_id, message_id ,message}))=>{
                         let s = String::from_utf8_lossy(&message.data);
-                        self.tx.send(MyMessage::new(s.to_string())).unwrap();
+                        match self.tx.send(MyMessage::new(s.to_string())) {
+                            Ok(_) => {},
+                            Err(e) => {
+                                println!("error send message to app: {e}");
+                            },
+                        }
                         println!("got message: {} with id: {} from peer: {:?}", s, message_id, peer_id);
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Identify(event)) => {
