@@ -40,8 +40,6 @@ impl EventLoop {
         }
 
         let bootaddr = Multiaddr::from_str("/dns4/server.hef.wtf/tcp/4001").unwrap();
-        //let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
-        //let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
         self.swarm.behaviour_mut().kademlia.add_address(
             &PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(),
             bootaddr,
