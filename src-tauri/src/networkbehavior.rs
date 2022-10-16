@@ -1,7 +1,7 @@
-use libp2p::gossipsub;
 use libp2p::identify::{Identify, IdentifyConfig, IdentifyEvent};
 use libp2p::kad::store::MemoryStore;
 use libp2p::kad::{Kademlia, KademliaEvent};
+use libp2p::{gossipsub, ping};
 use libp2p::{
     gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity},
     identify,
@@ -39,6 +39,7 @@ pub struct MyBehaviour {
     pub gossipsub: Gossipsub,
     pub kademlia: Kademlia<MemoryStore>,
     identify: Identify,
+    ping: ping::Behaviour,
 }
 
 #[derive(Debug)]
@@ -46,6 +47,7 @@ pub enum MyBehaviourEvent {
     Gossipsub(GossipsubEvent),
     Kademlia(KademliaEvent),
     Identify(IdentifyEvent),
+    Ping(ping::Event),
 }
 
 impl MyBehaviour {
@@ -57,6 +59,7 @@ impl MyBehaviour {
         Self {
             kademlia: Kademlia::new(local_key.public().to_peer_id(), store),
             identify: Identify::new(IdentifyConfig::new("/app/0.0.0".into(), local_key.public())),
+            ping: ping::Behaviour::new(ping::Config::new()),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
                 .unwrap(),
         }
@@ -78,5 +81,11 @@ impl From<KademliaEvent> for MyBehaviourEvent {
 impl From<identify::IdentifyEvent> for MyBehaviourEvent {
     fn from(event: identify::IdentifyEvent) -> Self {
         MyBehaviourEvent::Identify(event)
+    }
+}
+
+impl From<ping::Event> for MyBehaviourEvent {
+    fn from(event: ping::Event) -> Self {
+        MyBehaviourEvent::Ping(event)
     }
 }

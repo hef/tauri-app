@@ -39,6 +39,7 @@ impl EventLoop {
             }
         }
 
+        //let bootaddr = Multiaddr::from_str("/dns4/server.hef.wtf/tcp/4001").unwrap();
         let bootaddr = Multiaddr::from_str("/ip4/45.62.228.94/tcp/4001").unwrap();
         self.swarm.behaviour_mut().kademlia.add_address(
             &PeerId::from_str("12D3KooWKujo2R622ysC9vJXjTP5BRMwkWMFwMjdK3QVdjjQn9JM").unwrap(),
@@ -68,7 +69,7 @@ impl EventLoop {
                         println!("got message: {} with id: {} from peer: {:?}", s, message_id, peer_id);
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Identify(event)) => {
-                        println!("identify: {:?}", event);
+                        println!("identify event: {:?}", event);
                         if let IdentifyEvent::Received {
                             peer_id,
                             info,
@@ -76,6 +77,9 @@ impl EventLoop {
                         {
                             println!("peer_id: {:?}, info: {:?}", peer_id, info);
                         }
+                    },
+                    SwarmEvent::Behaviour(MyBehaviourEvent::Ping(event)) => {
+                        println!("ping event: {event:?}");
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Kademlia(event)) => {
                         println!("Kademlia event: {:?}", event);
