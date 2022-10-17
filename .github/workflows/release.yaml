@@ -48,8 +48,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, ubuntu-latest, windows-latest]
-
+        include:
+          - platform: macos-latest
+            target: aarch64-apple-darwin
+          - platform: macos-latest
+            target: x86_64-apple-darwin
+          - platform: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+          - platform: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - platform: windows-latest
+            target: aarch64-pc-windows-msvc
+          - platform: windows-latest
+            target: x86_64-pc-windows-msvc
     runs-on: ${{ matrix.platform }}
     steps:
     - uses: actions/checkout@v3
@@ -76,6 +87,7 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
+        target: ${{ matrix.target }}
     - name: Install Protoc
       uses: arduino/setup-protoc@v1
       with:
@@ -99,6 +111,7 @@ jobs:
         TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
       with:
         releaseId: ${{ needs.release.outputs.release_id }}
+        args: --target ${{ matrix.target }}
 
   build-server:
     needs: release
