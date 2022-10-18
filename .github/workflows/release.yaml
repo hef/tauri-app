@@ -114,7 +114,7 @@ jobs:
         args: --target ${{ matrix.target }}
 
   build-server:
-    needs: release
+    needs: [release, build-tauri]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
