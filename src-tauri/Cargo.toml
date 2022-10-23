@@ -40,7 +40,7 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.1.1", features = ["api-all", "updater"] }
 tokio = { version = "1.21.2", features = ["time", "macros"] }
 libp2p = { version = "0.48.0", features = ["tcp-tokio", "dns-tokio"] }
-base64 = "0.13.0"
+base64 = "0.13.1"
 env_logger = "0.9.1"
 reqwest = { version = "0.11.12", features = ["json"] }
 regex = "1.6.0"
