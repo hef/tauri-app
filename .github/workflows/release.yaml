@@ -74,7 +74,7 @@ jobs:
     - name: setup node
       uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 'lts/*'
         cache: 'npm'
     - name: bump version number
       run: npm version ${{ needs.release.outputs.version }} --no-git-tag-version
