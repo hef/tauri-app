@@ -56,7 +56,7 @@
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDY1NThDQ0JFMDM0NzkzRUQKUldUdGswY0R2c3hZWmY0ZWhCbFdwckdWSHlNNFdQY0ZjU2REL29IYUZvRSt4Vk1hdHZudDEzbHMK",
       "endpoints": [
-        "https://gist.githubusercontent.com/hef/cc9fa0b8ae58a8e1f7afde0079248234/raw/f8d92c4d45374699da7e1d7ed3d4f86644661302/tauri-app-update.json"
+        "https://hef.github.io/tauri-app/update.json"
       ]
     },
     "windows": [
