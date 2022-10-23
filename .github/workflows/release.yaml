@@ -78,23 +78,14 @@ jobs:
         cache: 'npm'
     - name: bump version number
       run: npm version ${{ needs.release.outputs.version }} --no-git-tag-version
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cargo/registry
-        key: '${{ runner.os }}-cargo-registry-${{ hashFiles(''**/Cargo.lock'') }}'
-    - uses: actions/cache@v3
-      with:
-        path: ~/.cargo/git
-        key: '${{ runner.os }}-cargo-index-${{ hashFiles(''**/Cargo.lock'') }}'
-    - uses: actions/cache@v3
-      with:
-        path: target
-        key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
     - name: install Rust stable
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
         target: ${{ matrix.target }}
+    - uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: src-tauri
     - name: Install Protoc
       uses: arduino/setup-protoc@v1
       with:
@@ -143,6 +134,8 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }}
         tags: ghcr.io/${{ github.repository }}/server:${{ needs.release.outputs.version }}
         labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
   announce-release:
     environment:
       name: github-pages
@@ -153,6 +146,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - run: mkdir -p _site
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
       - name: install Rust stable
         uses: actions-rs/toolchain@v1
         with:
