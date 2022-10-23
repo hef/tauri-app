@@ -3,9 +3,8 @@ use std::str::FromStr;
 use libp2p::{
     futures::StreamExt,
     gossipsub::{GossipsubEvent, IdentTopic},
-    identify::IdentifyEvent,
     swarm::SwarmEvent,
-    Multiaddr, PeerId, Swarm,
+    Multiaddr, PeerId, Swarm, identify,
 };
 use tokio::sync::{broadcast, mpsc};
 
@@ -74,7 +73,7 @@ impl EventLoop {
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Identify(event)) => {
                         println!("identify event: {:?}", event);
-                        if let IdentifyEvent::Received {
+                        if let identify::Event::Received {
                             peer_id,
                             info,
                         } = event
