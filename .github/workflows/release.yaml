@@ -159,7 +159,10 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          run: cargo run --bin update > _site/update.json
+      - name: Generate update.json
+        uses: actions-rs/cargo@v1
+        with:
+          cargo: run --bin update > _site/update.json
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
