@@ -5692,8 +5692,3 @@ dependencies = [
  "crc32fast",
  "crossbeam-utils",
 ]
-
-[[patch.unused]]
-name = "winrt-notification"
-version = "0.5.1"
-source = "git+https://github.com/hef/winrt-notification?rev=ea08c23590a9012406b7f9d55b0c37ce275ccb3b#ea08c23590a9012406b7f9d55b0c37ce275ccb3b"

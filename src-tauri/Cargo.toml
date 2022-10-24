@@ -46,9 +46,6 @@ env_logger = "0.9.1"
 reqwest = { version = "0.11.12", features = ["json"] }
 regex = "1.6.0"
 
-[patch.crates-io]
-winrt-notification = { git = "https://github.com/hef/winrt-notification", rev="ea08c23590a9012406b7f9d55b0c37ce275ccb3b" }
-
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
