@@ -160,7 +160,7 @@ jobs:
         with:
           toolchain: stable
       - name: Generate update.json
-        run: cargo run --bin update > _site/update.json
+        run: cargo run --bin update > ../_site/update.json
         working-directory: src-tauri
       - name: Setup Pages
         uses: actions/configure-pages@v2
