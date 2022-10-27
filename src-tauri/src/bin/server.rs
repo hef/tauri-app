@@ -1,8 +1,10 @@
 use {
-    app::client::Client,
+    app::network::Client,
     std::env,
     tokio::time::{sleep, Duration},
 };
+
+
 
 #[tokio::main]
 async fn main() {
@@ -18,7 +20,8 @@ async fn main() {
         identity = libp2p::identity::Keypair::generate_ed25519();
     }
 
-    let (c, event_loop) = Client::new(identity, 4001).await;
+    let listenon = format!("/ip4/0.0.0.0/tcp/80/ws");
+    let (c, event_loop) = Client::new(identity, listenon).await;
     tokio::spawn(event_loop.run());
     println!("peer id: {:?}", c.peer_id);
     sleep(Duration::from_secs(u64::MAX)).await;

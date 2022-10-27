@@ -1,7 +1,7 @@
-use crate::networkbehavior::MyBehaviour;
+use super::networkbehavior::MyBehaviour;
 use libp2p::{identity::Keypair, swarm::SwarmBuilder, PeerId, Swarm};
 
-pub async fn build_swarm(identity: Keypair, port: u32) -> Swarm<MyBehaviour> {
+pub async fn build_swarm(identity: Keypair, listen_on: String) -> Swarm<MyBehaviour> {
     let local_key = identity;
     let peer_id = PeerId::from(local_key.public());
     let transport = libp2p::tokio_development_transport(local_key.clone()).unwrap();
@@ -13,7 +13,6 @@ pub async fn build_swarm(identity: Keypair, port: u32) -> Swarm<MyBehaviour> {
             .build()
     };
 
-    let listenon = format!("/ip4/0.0.0.0/tcp/{port}");
-    swarm.listen_on(listenon.parse().unwrap()).unwrap();
+    swarm.listen_on(listen_on.parse().unwrap()).unwrap();
     swarm
 }

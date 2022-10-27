@@ -3,13 +3,8 @@
     windows_subsystem = "windows"
 )]
 
-mod client;
-mod eventloop;
-mod networkbehavior;
-mod swarm;
-
-use client::Client;
 use libp2p::identity::Keypair;
+use app::network::Client;
 use tauri::{Manager, State, WindowEvent};
 
 #[tauri::command]
@@ -64,7 +59,7 @@ async fn main() {
 
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
-    let (client, event_loop) = Client::new(Keypair::generate_ed25519(), 0).await;
+    let (client, event_loop) = Client::new(Keypair::generate_ed25519(), "/ip4/0.0.0.0/tcp/0".into()).await;
 
     tokio::spawn(event_loop.run());
 

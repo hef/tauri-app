@@ -1,6 +1,6 @@
-use crate::eventloop::EventLoop;
-use crate::networkbehavior::MyMessage;
-use crate::swarm::build_swarm;
+use super::eventloop::EventLoop;
+use super::networkbehavior::MyMessage;
+use super::swarm::build_swarm;
 use libp2p::identity::Keypair;
 use tokio::sync::{
     broadcast::{self, Receiver},
@@ -14,11 +14,11 @@ pub struct Client {
 }
 
 impl Client {
-    pub async fn new(identity: Keypair, port: u32) -> (Client, EventLoop) {
+    pub async fn new(identity: Keypair, listen_on: String) -> (Client, EventLoop) {
         let (tx, _rx) = broadcast::channel(2);
         let (tx2, rx2) = mpsc::channel(2);
 
-        let swarm = build_swarm(identity, port).await;
+        let swarm = build_swarm(identity,listen_on).await;
 
         let c = Client {
             tx: tx.clone(),
