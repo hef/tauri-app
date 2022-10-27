@@ -20,7 +20,7 @@ async fn main() {
         identity = libp2p::identity::Keypair::generate_ed25519();
     }
 
-    let listenon = format!("/ip4/0.0.0.0/tcp/80/ws");
+    let listenon = format!("/ip4/0.0.0.0/tcp/80");
     let (c, event_loop) = Client::new(identity, listenon).await;
     tokio::spawn(event_loop.run());
     println!("peer id: {:?}", c.peer_id);
