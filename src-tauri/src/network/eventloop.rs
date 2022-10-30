@@ -4,7 +4,7 @@ use libp2p::{
     futures::StreamExt,
     gossipsub::{GossipsubEvent, IdentTopic},
     swarm::SwarmEvent,
-    Multiaddr, PeerId, Swarm, identify,
+    Multiaddr, PeerId, Swarm, identify, relay::v2::relay, 
 };
 use tokio::sync::{broadcast, mpsc};
 
@@ -87,6 +87,9 @@ impl EventLoop {
                     SwarmEvent::Behaviour(MyBehaviourEvent::Kademlia(event)) => {
                         println!("Kademlia event: {:?}", event);
                     },
+                    SwarmEvent::Behaviour(MyBehaviourEvent::Relay(event)) => {
+                        println!("Relay Event: {:?}", event);
+                    }
                     SwarmEvent::NewListenAddr { listener_id, address } => {
                         println!("listener_id: {:?}, address: {:?}", listener_id, address);
                     },
@@ -120,6 +123,7 @@ impl EventLoop {
                     SwarmEvent::Dialing(p) => {
                         println!("Dialing: {p}");
                     },
+                    
                     _ => {}
                 }
             }

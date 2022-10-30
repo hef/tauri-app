@@ -6,6 +6,7 @@ use libp2p::{
     identify,
     identity::Keypair,
     NetworkBehaviour,
+    relay::v2::relay,
 };
 use serde::{Deserialize, Serialize};
 
@@ -39,6 +40,7 @@ pub struct MyBehaviour {
     pub kademlia: Kademlia<MemoryStore>,
     identify: identify::Behaviour,
     ping: ping::Behaviour,
+    relay: relay::Relay,
 }
 
 #[derive(Debug)]
@@ -47,6 +49,7 @@ pub enum MyBehaviourEvent {
     Kademlia(KademliaEvent),
     Identify(identify::Event),
     Ping(ping::Event),
+    Relay(relay::Event),
 }
 
 impl MyBehaviour {
@@ -59,6 +62,7 @@ impl MyBehaviour {
             kademlia: Kademlia::new(local_key.public().to_peer_id(), store),
             identify: identify::Behaviour::new(identify::Config::new("/app/0.0.0".into(), local_key.public())),
             ping: ping::Behaviour::new(ping::Config::new()),
+            relay: relay::Relay::new(local_key.public().to_peer_id(), Default::default()),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
                 .unwrap(),
         }
@@ -86,5 +90,11 @@ impl From<identify::Event> for MyBehaviourEvent {
 impl From<ping::Event> for MyBehaviourEvent {
     fn from(event: ping::Event) -> Self {
         MyBehaviourEvent::Ping(event)
+    }
+}
+
+impl From<relay::Event> for MyBehaviourEvent {
+    fn from(event: relay::Event) -> Self {
+        MyBehaviourEvent::Relay(event)
     }
 }

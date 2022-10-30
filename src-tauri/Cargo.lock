@@ -1943,6 +1943,7 @@ dependencies = [
  "libp2p-mplex",
  "libp2p-noise",
  "libp2p-ping",
+ "libp2p-relay",
  "libp2p-swarm",
  "libp2p-swarm-derive",
  "libp2p-tcp",
@@ -2108,6 +2109,7 @@ dependencies = [
  "libp2p-identify",
  "libp2p-kad",
  "libp2p-ping",
+ "libp2p-relay",
  "libp2p-swarm",
  "prometheus-client",
 ]
@@ -2165,6 +2167,32 @@ dependencies = [
  "libp2p-swarm",
  "log",
  "rand 0.8.5",
+ "void",
+]
+
+[[package]]
+name = "libp2p-relay"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3266c322fa094e229eb63c2644b0209a7e1db1d78ab6f03956eb3534bb514155"
+dependencies = [
+ "asynchronous-codec",
+ "bytes",
+ "either",
+ "futures",
+ "futures-timer",
+ "instant",
+ "libp2p-core",
+ "libp2p-swarm",
+ "log",
+ "pin-project",
+ "prost",
+ "prost-build",
+ "prost-codec",
+ "rand 0.8.5",
+ "smallvec",
+ "static_assertions",
+ "thiserror",
  "void",
 ]
 
