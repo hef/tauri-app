@@ -93,7 +93,13 @@ impl EventLoop {
                     }
                     SwarmEvent::Behaviour(MyBehaviourEvent::Dcutr(event)) => {
                         println!("dcutr Event: {:?}", event);
+                    },
+                    SwarmEvent::Behaviour(MyBehaviourEvent::RelayClient(event)) => {
+                        println!("relay client event: {:?}", event);
                     }
+                    SwarmEvent::Behaviour(MyBehaviourEvent::AutoNat(event)) => {
+                        println!("autonat event: {:?}", event);
+                    },
                     SwarmEvent::NewListenAddr { listener_id, address } => {
                         println!("listener_id: {:?}, address: {:?}", listener_id, address);
                     },

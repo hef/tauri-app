@@ -10,7 +10,7 @@ use libp2p::{
     relay::v2::relay,
     NetworkBehaviour,
 };
-use libp2p::{gossipsub, ping};
+use libp2p::{gossipsub, ping, autonat};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -43,9 +43,10 @@ pub struct MyBehaviour {
     pub kademlia: Kademlia<MemoryStore>,
     identify: identify::Behaviour,
     ping: ping::Behaviour,
-    relay: relay::Relay,
-    dcutr: dcutr::behaviour::Behaviour,
+    relay: Toggle<relay::Relay>,
+    dcutr: Toggle<dcutr::behaviour::Behaviour>,
     relay_client: Toggle<client::Client>,
+    auto_nat: autonat::Behaviour,
 }
 
 #[derive(Debug)]
@@ -57,6 +58,7 @@ pub enum MyBehaviourEvent {
     Relay(relay::Event),
     Dcutr(dcutr::behaviour::Event),
     RelayClient(client::Event),
+    AutoNat(autonat::Event)
 }
 
 impl MyBehaviour {
@@ -71,9 +73,13 @@ impl MyBehaviour {
                 identify::Config::new("/app/0.0.0".into(), local_key.public()).with_cache_size(100),
             ),
             ping: ping::Behaviour::new(ping::Config::new()),
-            relay: relay::Relay::new(local_key.public().to_peer_id(), Default::default()),
-            dcutr: dcutr::behaviour::Behaviour::new(),
+            relay: Some(relay::Relay::new(local_key.public().to_peer_id(), Default::default())).into(),
+            dcutr: None.into(),
             relay_client: None.into(),
+            auto_nat: autonat::Behaviour::new(
+                local_key.public().to_peer_id(),
+                autonat::Config::default(),
+            ),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
                 .unwrap(),
         }
@@ -93,11 +99,16 @@ impl MyBehaviour {
                 identify::Config::new("/app/0.0.0".into(), local_key.public()).with_cache_size(100),
             ),
             ping: ping::Behaviour::new(ping::Config::new()),
-            relay: relay::Relay::new(local_key.public().to_peer_id(), Default::default()),
-            dcutr: dcutr::behaviour::Behaviour::new(),
+            relay: None.into(),
+            dcutr: Some(dcutr::behaviour::Behaviour::new()).into(),
+            auto_nat: autonat::Behaviour::new(
+                local_key.public().to_peer_id(),
+                autonat::Config::default(),
+            ),
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
                 .unwrap(),
             relay_client: Some(relay_client).into(),
+
         }
     }
 }
@@ -141,5 +152,12 @@ impl From<dcutr::behaviour::Event> for MyBehaviourEvent {
 impl From<client::Event> for MyBehaviourEvent {
     fn from(event: client::Event) -> Self {
         MyBehaviourEvent::RelayClient(event)
+    }
+}
+
+
+impl From<autonat::Event> for MyBehaviourEvent {
+    fn from(event: autonat::Event) -> Self {
+        MyBehaviourEvent::AutoNat(event)
     }
 }
