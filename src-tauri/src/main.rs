@@ -7,6 +7,12 @@ use libp2p::identity::Keypair;
 use app::network::Client;
 use tauri::{Manager, State, WindowEvent};
 
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
+
+
 #[tauri::command]
 async fn send_message(state: State<'_, Client>, message: String) -> Result<(), ()> {
     state.send_message(message).await;
