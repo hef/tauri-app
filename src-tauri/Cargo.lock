@@ -1933,7 +1933,9 @@ dependencies = [
  "getrandom 0.2.8",
  "instant",
  "lazy_static",
+ "libp2p-autonat",
  "libp2p-core",
+ "libp2p-dcutr",
  "libp2p-dns",
  "libp2p-gossipsub",
  "libp2p-identify",
@@ -1952,6 +1954,25 @@ dependencies = [
  "parking_lot 0.12.1",
  "pin-project",
  "smallvec",
+]
+
+[[package]]
+name = "libp2p-autonat"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5a72e3fc1050ee2a206e30bf81d946df6ddb7b6930ae599027e3272d9035b157"
+dependencies = [
+ "async-trait",
+ "futures",
+ "futures-timer",
+ "instant",
+ "libp2p-core",
+ "libp2p-request-response",
+ "libp2p-swarm",
+ "log",
+ "prost",
+ "prost-build",
+ "rand 0.8.5",
 ]
 
 [[package]]
@@ -1985,6 +2006,28 @@ dependencies = [
  "unsigned-varint",
  "void",
  "zeroize",
+]
+
+[[package]]
+name = "libp2p-dcutr"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "380846ac24e641d38bfdb317cd77cbbb923527ce2eb8f71bce0b107c7249e2a9"
+dependencies = [
+ "asynchronous-codec",
+ "bytes",
+ "either",
+ "futures",
+ "futures-timer",
+ "instant",
+ "libp2p-core",
+ "libp2p-swarm",
+ "log",
+ "prost",
+ "prost-build",
+ "prost-codec",
+ "thiserror",
+ "void",
 ]
 
 [[package]]
@@ -2105,6 +2148,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ee31b08e78b7b8bfd1c4204a9dd8a87b4fcdf6dafc57eb51701c1c264a81cb9"
 dependencies = [
  "libp2p-core",
+ "libp2p-dcutr",
  "libp2p-gossipsub",
  "libp2p-identify",
  "libp2p-kad",
@@ -2194,6 +2238,24 @@ dependencies = [
  "static_assertions",
  "thiserror",
  "void",
+]
+
+[[package]]
+name = "libp2p-request-response"
+version = "0.22.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8827af16a017b65311a410bb626205a9ad92ec0473967618425039fa5231adc1"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "futures",
+ "instant",
+ "libp2p-core",
+ "libp2p-swarm",
+ "log",
+ "rand 0.8.5",
+ "smallvec",
+ "unsigned-varint",
 ]
 
 [[package]]
@@ -4661,6 +4723,8 @@ checksum = "d86a8dc7f45e4c1b0d30e43038c38f274e77af056aa5f74b93c2cf9eb3c1c836"
 dependencies = [
  "asynchronous-codec",
  "bytes",
+ "futures-io",
+ "futures-util",
 ]
 
 [[package]]

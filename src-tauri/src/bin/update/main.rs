@@ -8,11 +8,15 @@ mod updatefile;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
-    let response: Root = client.get("https://api.github.com/repos/hef/tauri-app/releases/latest")
+    let response: Root = client
+        .get("https://api.github.com/repos/hef/tauri-app/releases/latest")
         .header("user-agent", "tauri-app/0.0.1")
-        .send().await?.json().await?;
-    
-    let mut update_file = UpdateFile{
+        .send()
+        .await?
+        .json()
+        .await?;
+
+    let mut update_file = UpdateFile {
         version: response.name,
         notes: response.body,
         pub_date: response.published_at,
@@ -51,18 +55,39 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             continue;
         }
         if darwin_sig.is_match(&asset.name) {
-            let signature_bytes = client.get(asset.browser_download_url.clone()).header("user-agent", "tauri-app/0.0.1").send().await?.bytes().await?;
-            update_file.platforms.darwin_x86_64.signature = String::from_utf8_lossy(&signature_bytes).to_string();
+            let signature_bytes = client
+                .get(asset.browser_download_url.clone())
+                .header("user-agent", "tauri-app/0.0.1")
+                .send()
+                .await?
+                .bytes()
+                .await?;
+            update_file.platforms.darwin_x86_64.signature =
+                String::from_utf8_lossy(&signature_bytes).to_string();
             continue;
         }
         if windows_sig.is_match(&asset.name) {
-            let signature_bytes = client.get(asset.browser_download_url.clone()).header("user-agent", "tauri-app/0.0.1").send().await?.bytes().await?;
-            update_file.platforms.windows_x86_64.signature = String::from_utf8_lossy(&signature_bytes).to_string();
+            let signature_bytes = client
+                .get(asset.browser_download_url.clone())
+                .header("user-agent", "tauri-app/0.0.1")
+                .send()
+                .await?
+                .bytes()
+                .await?;
+            update_file.platforms.windows_x86_64.signature =
+                String::from_utf8_lossy(&signature_bytes).to_string();
             continue;
         }
         if appimage_sig.is_match(&asset.name) {
-            let signature_bytes = client.get(asset.browser_download_url.clone()).header("user-agent", "tauri-app/0.0.1").send().await?.bytes().await?;
-            update_file.platforms.linux_x86_64.signature = String::from_utf8_lossy(&signature_bytes).to_string();
+            let signature_bytes = client
+                .get(asset.browser_download_url.clone())
+                .header("user-agent", "tauri-app/0.0.1")
+                .send()
+                .await?
+                .bytes()
+                .await?;
+            update_file.platforms.linux_x86_64.signature =
+                String::from_utf8_lossy(&signature_bytes).to_string();
             continue;
         }
     }

@@ -3,8 +3,9 @@ use std::str::FromStr;
 use libp2p::{
     futures::StreamExt,
     gossipsub::{GossipsubEvent, IdentTopic},
+    identify,
     swarm::SwarmEvent,
-    Multiaddr, PeerId, Swarm, identify, relay::v2::relay, 
+    Multiaddr, PeerId, Swarm,
 };
 use tokio::sync::{broadcast, mpsc};
 
@@ -90,6 +91,9 @@ impl EventLoop {
                     SwarmEvent::Behaviour(MyBehaviourEvent::Relay(event)) => {
                         println!("Relay Event: {:?}", event);
                     }
+                    SwarmEvent::Behaviour(MyBehaviourEvent::Dcutr(event)) => {
+                        println!("dcutr Event: {:?}", event);
+                    }
                     SwarmEvent::NewListenAddr { listener_id, address } => {
                         println!("listener_id: {:?}, address: {:?}", listener_id, address);
                     },
@@ -123,8 +127,10 @@ impl EventLoop {
                     SwarmEvent::Dialing(p) => {
                         println!("Dialing: {p}");
                     },
-                    
-                    _ => {}
+
+                    e => {
+                        println!("unhandled event: {:?}", e);
+                    }
                 }
             }
         }

@@ -3,15 +3,14 @@
     windows_subsystem = "windows"
 )]
 
+use app::network::{build_swarm_client, Client};
 use libp2p::identity::Keypair;
-use app::network::Client;
 use tauri::{Manager, State, WindowEvent};
 
 use mimalloc::MiMalloc;
 
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
-
 
 #[tauri::command]
 async fn send_message(state: State<'_, Client>, message: String) -> Result<(), ()> {
@@ -65,7 +64,9 @@ async fn main() {
 
     tauri::async_runtime::set(tokio::runtime::Handle::current());
 
-    let (client, event_loop) = Client::new(Keypair::generate_ed25519(), "/ip4/0.0.0.0/tcp/0".into()).await;
+    let swarm = build_swarm_client(Keypair::generate_ed25519(), "/ip4/0.0.0.0/tcp/0".into()).await;
+
+    let (client, event_loop) = Client::new(swarm);
 
     tokio::spawn(event_loop.run());
 

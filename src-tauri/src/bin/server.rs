@@ -1,10 +1,10 @@
+use app::network::build_swarm;
+
 use {
     app::network::Client,
     std::env,
     tokio::time::{sleep, Duration},
 };
-
-
 
 #[tokio::main]
 async fn main() {
@@ -21,7 +21,8 @@ async fn main() {
     }
 
     let listenon = format!("/ip4/0.0.0.0/tcp/80");
-    let (c, event_loop) = Client::new(identity, listenon).await;
+    let swarm = build_swarm(identity, listenon).await;
+    let (c, event_loop) = Client::new(swarm);
     tokio::spawn(event_loop.run());
     println!("peer id: {:?}", c.peer_id);
     sleep(Duration::from_secs(u64::MAX)).await;
