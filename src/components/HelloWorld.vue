@@ -23,6 +23,7 @@ function submit() {
 
 <template>
   <h1>{{ msg }}</h1>
+  
 
   <div class="card">
     {{ incoming_message }}

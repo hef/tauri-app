@@ -1,23 +1,31 @@
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
+import { useQuasar } from 'quasar'
+import { ref } from 'vue'
+
+const $q = useQuasar()
+$q.dark.set(true)
+
+const leftDrawerOpen = ref(true)
+
 </script>
 
 <template>
-  <HelloWorld msg="Hello, Tauri!" />
+  <div id="q-app"></div>
+  <q-layout view="hHh lpR fFf">
+
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" behavior="desktop" bordered>
+      <!-- drawer content -->
+    </q-drawer>
+
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+
+  </q-layout>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.q-app{
+  min-height: 100vh;
 }
 </style>

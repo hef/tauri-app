@@ -1,5 +1,5 @@
 use super::networkbehavior::MyBehaviour;
-use libp2p::core::multiaddr::{Multiaddr, Protocol};
+use libp2p::core::multiaddr::{Multiaddr};
 use libp2p::dns;
 use libp2p::tcp;
 use libp2p::{
