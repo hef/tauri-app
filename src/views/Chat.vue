@@ -1,7 +1,7 @@
 
 <script setup>
-import LogLine from '../components/logline.vue';
-import ChatInput from '../components/chatinput.vue';
+import LogLine from '../components/LogLine.vue';
+import ChatInput from '../components/ChatInput.vue';
 import { useMessageStore } from '../stores/message';
 import { listen } from '@tauri-apps/api/event'
 
