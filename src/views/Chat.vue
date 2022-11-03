@@ -4,11 +4,11 @@ import LogLine from '../components/LogLine.vue';
 import ChatInput from '../components/ChatInput.vue';
 import { useMessageStore } from '../stores/message';
 import { listen } from '@tauri-apps/api/event'
-
 const messages = useMessageStore();
 
 listen("app://message", e => {
-  messages.addMessage({ id: 1,  message: e.payload})
+  // todo: switch to typescript.  I have too many things called "message" and it's confusing
+  messages.addMessage({ id: 1,  message: JSON.parse(e.payload).data})
 })
 </script>
 
