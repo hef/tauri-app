@@ -2,6 +2,7 @@ use libp2p::kad::store::MemoryStore;
 use libp2p::kad::{Kademlia, KademliaEvent};
 use libp2p::relay::v2::client;
 use libp2p::swarm::behaviour::toggle::Toggle;
+use libp2p::{autonat, gossipsub, ping};
 use libp2p::{
     dcutr,
     gossipsub::{Gossipsub, GossipsubEvent, MessageAuthenticity},
@@ -10,7 +11,6 @@ use libp2p::{
     relay::v2::relay,
     NetworkBehaviour,
 };
-use libp2p::{gossipsub, ping, autonat};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -58,7 +58,7 @@ pub enum MyBehaviourEvent {
     Relay(relay::Event),
     Dcutr(dcutr::behaviour::Event),
     RelayClient(client::Event),
-    AutoNat(autonat::Event)
+    AutoNat(autonat::Event),
 }
 
 impl MyBehaviour {
@@ -73,7 +73,11 @@ impl MyBehaviour {
                 identify::Config::new("/app/0.0.0".into(), local_key.public()).with_cache_size(100),
             ),
             ping: ping::Behaviour::new(ping::Config::new()),
-            relay: Some(relay::Relay::new(local_key.public().to_peer_id(), Default::default())).into(),
+            relay: Some(relay::Relay::new(
+                local_key.public().to_peer_id(),
+                Default::default(),
+            ))
+            .into(),
             dcutr: None.into(),
             relay_client: None.into(),
             auto_nat: autonat::Behaviour::new(
@@ -108,7 +112,6 @@ impl MyBehaviour {
             gossipsub: Gossipsub::new(MessageAuthenticity::Signed(local_key), gossipsub_config)
                 .unwrap(),
             relay_client: Some(relay_client).into(),
-
         }
     }
 }
@@ -154,7 +157,6 @@ impl From<client::Event> for MyBehaviourEvent {
         MyBehaviourEvent::RelayClient(event)
     }
 }
-
 
 impl From<autonat::Event> for MyBehaviourEvent {
     fn from(event: autonat::Event) -> Self {
