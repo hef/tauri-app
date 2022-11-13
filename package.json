@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.15.5",
-    "@tauri-apps/api": "1.1.0",
+    "@tauri-apps/api": "1.2.0",
     "pinia": "^2.0.23",
     "quasar": "^2.10.1",
     "vue": "3.2.41",
@@ -20,7 +20,7 @@
   "devDependencies": {
     "@quasar/vite-plugin": "^1.2.3",
     "@semantic-release/exec": "6.0.3",
-    "@tauri-apps/cli": "1.1.1",
+    "@tauri-apps/cli": "1.2.0",
     "@vitejs/plugin-vue": "3.1.2",
     "sass": "1.32.12",
     "semantic-release": "19.0.5",
