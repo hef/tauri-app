@@ -22,7 +22,7 @@
     "@semantic-release/exec": "6.0.3",
     "@tauri-apps/cli": "1.2.0",
     "@vitejs/plugin-vue": "3.2.0",
-    "sass": "1.32.12",
+    "sass": "1.56.1",
     "semantic-release": "19.0.5",
     "vite": "3.2.3"
   },
