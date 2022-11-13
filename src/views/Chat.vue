@@ -8,7 +8,8 @@ const messages = useMessageStore();
 
 listen("app://message", e => {
   // todo: switch to typescript.  I have too many things called "message" and it's confusing
-  messages.addMessage({ id: 1,  message: JSON.parse(e.payload).data})
+  console.log(e);
+  messages.addMessage({ id: 1,  message: e.payload.data})
 })
 </script>
 
