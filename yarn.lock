@@ -336,14 +336,14 @@
     "@octokit/openapi-types" "^12.10.0"
 
 "@quasar/extras@^1.15.5":
-  version "1.16.6"
-  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.6.tgz#6b79d3c01785793c10543c93f21653e26539a740"
-  integrity sha512-yHvp2Z73LuS29fhjE+dSzUvEKGCuTTy+WGIsAYxbnhBVW2rTYlYmFQfGdOPdzNreHZh+G/1D56n0Q6ClZxJHKg==
+  version "1.16.8"
+  resolved "https://registry.yarnpkg.com/@quasar/extras/-/extras-1.16.8.tgz#be93a0e2d465425f1d85e9fc9a09096bf2845aaf"
+  integrity sha512-mNSwQ6wkIVoAemhYdLm9q/FVqLHmVONZgCYdLLeqpakKNsR0r/zHQnCngzdDaXI7veYEvE0uW1gJa1wdQsxXxA==
 
 "@quasar/vite-plugin@^1.2.3":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@quasar/vite-plugin/-/vite-plugin-1.5.0.tgz#ebc4876fd2a11fb3721cfc1bef80d49917d4265c"
-  integrity sha512-Kd4nFeWd0eAr7e+HMY8Wtmo86RjPZhCi6/bybTAyliFmS8AhZ2/oRTOGnBD9R1C6Ub3JPzC4eWFA20IlHa5A3w==
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@quasar/vite-plugin/-/vite-plugin-1.6.0.tgz#3b8f82656b14782fafe66b30dfac0775b87ab9dd"
+  integrity sha512-LmbV76G1CwWZbrEQhqyZpkRQTJyO3xpW55aXY1zWN+JhyUeG77CcMCEWteBVnJ6I6ehUPFDC9ONd2+WlwH6rNQ==
 
 "@semantic-release/commit-analyzer@^9.0.2":
   version "9.0.2"
