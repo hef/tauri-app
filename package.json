@@ -14,7 +14,7 @@
     "@tauri-apps/api": "1.5.1",
     "pinia": "^2.0.23",
     "quasar": "^2.10.1",
-    "vue": "3.3.8",
+    "vue": "3.3.10",
     "vue-router": "4"
   },
   "devDependencies": {
