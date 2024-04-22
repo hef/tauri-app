@@ -30,7 +30,7 @@ base64 = "0.13.1"
 env_logger = "0.9.1"
 reqwest = { version = "0.11.12", features = ["json"] }
 regex = "1.10.4"
-mimalloc = "0.1.30"
+mimalloc = "0.1.41"
 clap = { version = "4.5.4", features = ["derive", "env", "unicode"] }
 
 [features]
