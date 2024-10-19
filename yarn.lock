@@ -2956,9 +2956,9 @@ qrcode-terminal@^0.12.0:
   integrity sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==
 
 quasar@^2.10.1:
-  version "2.15.2"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.15.2.tgz#8c945c87d8723696614a56a17ffcc041d8a26ab6"
-  integrity sha512-euCm5Elo5SfGNRY18HvKAknkBwesoUAFhZ6BxmliiEVHGes53ZcUKnMwZU/XsRhwiC6VQzBBSk/U0iEcdp/NyA==
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.17.1.tgz#3c479cf864507a77736f1a250152bdfc2bb90c6d"
+  integrity sha512-4tnprxb+oEFChqcHGeQnprTmsr9gRK/R4N2O6Gg0AxpP22G9ttKeeqhH7+Soyjdi9RUcc6d5Y49T6rRg4hGJXw==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
